@@ -40,5 +40,21 @@ namespace GBUtils.IO
             File.WriteAllBytes(fullFileName, contentBytes);
             return fullFileName;
         }
+
+        public static string StripExtension(this string path)
+        {
+            if (string.IsNullOrEmpty(path)) return path;
+
+            int dotIndex = path.LastIndexOf(".", StringComparison.Ordinal);
+            if (dotIndex > -1)
+            {
+                int sepparatorIndex = path.LastIndexOf('/');
+                if (dotIndex > sepparatorIndex)
+                {
+                    return path.Substring(0, dotIndex);
+                }
+            }
+            return path;
+        }
     }
 }
