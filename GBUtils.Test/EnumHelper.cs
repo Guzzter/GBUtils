@@ -27,7 +27,7 @@ namespace GBUtils.Test
         public void Parse_ShouldReturnInValidEnum()
         {
             var ex = ExceptionAssert.Throws<ArgumentException>(() => EnumHelper<TestEnum>.Parse("none", false));
-            Assert.AreEqual("Requested value 'none' was not found.", ex.Message);
+            Assert.IsTrue(ex.Message.Contains("none"));
         }
 
         [TestMethod]

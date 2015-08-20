@@ -54,6 +54,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Extension\DateTimeExtensionTest.cs" />
+    <Compile Include="Extension\LongExtensionTest.cs" />
     <Compile Include="Extension\StringExtensionTest.cs" />
     <Compile Include="IO\FileFormatter.cs" />
     <Compile Include="IO\FileUtils.cs" />
