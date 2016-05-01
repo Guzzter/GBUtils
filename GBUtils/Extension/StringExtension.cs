@@ -41,6 +41,11 @@
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Converts a string from MAINLINE to Mainline
+        /// </summary>
+        /// <param name="source">String to convert</param>
+        /// <returns>Correct cased string</returns>
         public static string FirstCharacterUppercaseRestLowercase(this string source)
         {
             string result = source;
@@ -58,6 +63,11 @@
             return result;
         }
 
+        /// <summary>
+        /// Converts a string from mainline to Mainline
+        /// </summary>
+        /// <param name="source">String to convert</param>
+        /// <returns>Correct cased string</returns>
         public static string FirstCharacterUppercase(this string source)
         {
             string result = source;
@@ -109,23 +119,11 @@
 
         public static string Normalized(this string source)
         {
-            if (string.IsNullOrEmpty(source))
-            {
-                return string.Empty;
-            }
-
             string normalized = source.Normalize(NormalizationForm.FormKD);
             Encoding removal = Encoding.GetEncoding(Encoding.ASCII.CodePage, encoderReplacementFallback,
                                                     decoderReplacementFallback);
             byte[] bytes = removal.GetBytes(normalized);
             return Encoding.ASCII.GetString(bytes);
-        }
-
-
-        public static string With(this string format, params object[] arg0)
-        {
-            if (format == null) throw new ArgumentNullException("format");
-            return string.Format(format, arg0);
         }
 
         /// <summary>
@@ -151,44 +149,127 @@
         }
 
         /// <summary>
-        ///  Replaces the format item in a specified System.String with the text equivalent
-        ///  of the value of a specified System.Object instance.
+        /// Same as Substring function with one difference it will not return errors when invalid positions are given.
         /// </summary>
-        /// <param name="value">A composite format string</param>
-        /// <param name="arg0">An System.Object to format</param>
-        /// <returns>A copy of format in which the first format item has been replaced by the
-        /// System.String equivalent of arg0</returns>
-        public static string Format(this string value, object arg0)
+        /// <param name="pValue"></param>
+        /// <param name="pPosition"></param>
+        /// <param name="pLength"></param>
+        /// <returns></returns>
+        public static string SubStringLeft(string pValue, int pPosition, int pLength)
         {
-            return string.Format(value, arg0);
+            string val = pValue;
+            if (val == null)
+            {
+                return string.Empty;
+            }
+            if (pLength == 0)
+            {
+                return string.Empty;
+            }
+            if (pPosition > pValue.Length)
+            {
+                return string.Empty;
+            }
+            int len = pLength;
+            if ((pPosition + len) > pValue.Length)
+            {
+                len = pValue.Length - pPosition;
+            }
+            val = pValue.Substring(pPosition, len);
+            return val;
+        }
+
+
+        /// <summary>
+        /// Same as substring only in Mirror from the right
+        /// </summary>
+        /// <returns></returns>
+        public static string SubStringRight(string pValue, int pPosition, int pLength)
+        {
+            string val = pValue;
+            if (val == null)
+            {
+                return string.Empty;
+            }
+            if (pLength == 0)
+            {
+                return string.Empty;
+            }
+            if (pPosition > pValue.Length)
+            {
+                return string.Empty;
+            }
+            int len = pLength;
+            string value = pValue;
+            int endPos = pValue.Length - pPosition;
+            int pos = endPos - len;
+            if (pos < 0)
+            {
+                len = len + pos;
+                pos = 0;
+            }
+            if (len < 0)
+            {
+                len = 0;
+            }
+            val = value;
+            val = pValue.Substring(pos, len);
+            return val;
         }
 
         /// <summary>
-        ///  Replaces the format item in a specified System.String with the text equivalent
-        ///  of the value of a specified System.Object instance.
+        /// Truncates a string to a desired length
         /// </summary>
-        /// <param name="value">A composite format string</param>
-        /// <param name="args">An System.Object array containing zero or more objects to format.</param>
-        /// <returns>A copy of format in which the format items have been replaced by the System.String
-        /// equivalent of the corresponding instances of System.Object in args.</returns>
-        public static string Format(this string value, params object[] args)
+        /// <param name="pValue"></param>
+        /// <param name="pMaxLength"></param>
+        /// <returns></returns>
+        public static string Truncate(this string pValue, int pMaxLength)
         {
-            return string.Format(value, args);
+            return pValue.Left(pMaxLength);
         }
 
         /// <summary>
-        /// Checks string object's value to array of string values
-        /// </summary>        
-        /// <param name="stringValues">Array of string values to compare</param>
-        /// <returns>Return true if any string value matches</returns>
-        public static bool In(this string value, params string[] stringValues)
+        /// Match a pattern like:
+        /// 
+        /// *.txt;*.jpg;
+        /// 
+        /// </summary>
+        /// <param name="pText"></param>
+        /// <param name="pPattern">Separated pattern</param>
+        /// <returns></returns>
+        public static bool PatternMatch(this string pText, string pPattern)
         {
-            foreach (string otherValue in stringValues)
-                if (string.Compare(value, otherValue) == 0)
-                    return true;
-
-            return false;
+            if (pPattern == null)
+            {
+                return false;
+            }
+            string[] patterns = pPattern.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            return pText.ContainsOneOfIc(patterns);
         }
 
+        public static string ReplaceIc(this string original,
+                    string pattern, string replacement)
+        {
+            int count, position0, position1;
+            count = position0 = position1 = 0;
+            string upperString = original.ToUpper();
+            string upperPattern = pattern.ToUpper();
+            int inc = (original.Length / pattern.Length) *
+                      (replacement.Length - pattern.Length);
+            char[] chars = new char[original.Length + Math.Max(0, inc)];
+            while ((position1 = upperString.IndexOf(upperPattern,
+                                              position0)) != -1)
+            {
+                for (int i = position0; i < position1; ++i)
+                    chars[count++] = original[i];
+                for (int i = 0; i < replacement.Length; ++i)
+                    chars[count++] = replacement[i];
+                position0 = position1 + pattern.Length;
+            }
+            if (position0 == 0) return original;
+            for (int i = position0; i < original.Length; ++i)
+                chars[count++] = original[i];
+            return new string(chars, 0, count);
+        }
     }
 }

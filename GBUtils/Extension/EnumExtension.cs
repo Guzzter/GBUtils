@@ -20,6 +20,13 @@ namespace GBUtils.Extension
             return (T)System.Enum.Parse(typeof(T), value, true);
         }
 
+        public static T ToEnum<T>(this string value, T defaultValue)
+            where T : struct
+        {
+            T parsedEnum = defaultValue;
+            Enum.TryParse(value, true, out parsedEnum);
+            return parsedEnum;
+        }
 
     }
 }

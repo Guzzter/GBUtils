@@ -53,6 +53,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Extension\EnumExtensionTest.cs" />
+    <Compile Include="Extension\StringCompareExtensionTest.cs" />
     <Compile Include="Extension\DateTimeExtensionTest.cs" />
     <Compile Include="Extension\LongExtensionTest.cs" />
     <Compile Include="Extension\StringExtensionTest.cs" />

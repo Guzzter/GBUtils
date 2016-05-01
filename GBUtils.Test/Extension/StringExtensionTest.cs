@@ -4,6 +4,7 @@
     using GBUtils.IO;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
 
     [TestClass]
     public class StringExtensionTest
@@ -62,17 +63,17 @@
         }
 
         [TestMethod]
-        public void WithFormattedString()
+        public void Right()
         {
-            // Arrange
-            string source = "Hey {0}, this is {1} work";
-            string expected = "Hey dude, this is great work";
+            Assert.AreEqual("ude", "Hey Dude".Right(3));
+            Assert.AreEqual("Hey Dude", "Hey Dude".Right(300));
+        }
 
-            // Act
-            string target = source.With("dude", "great");
-
-            // Assert
-            Assert.AreEqual(expected, target);
+        [TestMethod]
+        public void Left()
+        {
+            Assert.AreEqual("Hey", "Hey Dude".Left(3));
+            Assert.AreEqual("Hey Dude", "Hey Dude".Left(300));
         }
     }
 }

@@ -32,6 +32,10 @@
             DateTime dt = new DateTime(2014, 3, 13); 
             Assert.AreEqual(new DateTime(2014, 3, 10), dt.StartOfWeek(DayOfWeek.Monday));
             Assert.AreEqual(new DateTime(2014, 3, 9), dt.StartOfWeek(DayOfWeek.Sunday));
+
+            DateTime dt2 = new DateTime(2016, 5, 1);
+            Assert.AreEqual(new DateTime(2016, 4, 30), dt2.StartOfWeek(DayOfWeek.Saturday));
+
         }
     }
 }
