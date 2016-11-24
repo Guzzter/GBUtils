@@ -18,7 +18,7 @@ namespace GBUtils.Test.Extension
             size = (1024 * 1024 * 1024 - 1);
             Assert.AreEqual("1024 MB", size.FormatBytes()); 
             size = (1024 * 1024 + 600000);
-            Assert.AreEqual("1,57 MB", size.FormatBytes());
+            Assert.AreEqual("1.57 MB", size.FormatBytes());
         }
     }
 }
