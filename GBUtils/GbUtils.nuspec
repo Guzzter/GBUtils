@@ -6,15 +6,9 @@
 		<description>Guus Beltman Utils library containing reusable extension methods</description>
 		<authors>Guus Beltman</authors>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<readme>docs\readme.md</readme>
-		<releaseNotes>
-		</releaseNotes>
 		<tags>String Extension Regex Utils</tags>
 		<dependencies>
 			<dependency id="SharpZipLib" version="1.3.3" />
 		</dependencies>
 	</metadata>
-	<files>
-		<file src="..\readme.md" target="docs\" />
-	</files>
 </package>
