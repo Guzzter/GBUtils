@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>GBUtils</id>
-		<version></version>
+		<version>1.0.0</version>
 		<description>Guus Beltman Utils library containing reusable extension methods</description>
 		<authors>Guus Beltman</authors>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
