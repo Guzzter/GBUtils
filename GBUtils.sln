@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Files", "Files", "{E733CE0B-25E4-42B3-9077-15BCC57CECE5}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		azure-pipelines.yml = azure-pipelines.yml
 		CodeMaid.config = CodeMaid.config
 		LICENSE = LICENSE
 		README.md = README.md

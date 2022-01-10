@@ -4,6 +4,9 @@ using FluentAssertions;
 
 namespace GBUtils.Test
 {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8604 // Possible null reference argument.
+
     public class WhenUsingStringUtils
     {
         [Fact]
@@ -69,9 +72,9 @@ namespace GBUtils.Test
             "".IsBlank().Should().BeTrue();
             " ".IsBlank().Should().BeTrue();
             "   ".IsBlank().Should().BeTrue();
-
-            string testString = null;
-            testString.IsBlank().Should().BeTrue();
         }
     }
+
+#pragma warning restore CS8604
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 }

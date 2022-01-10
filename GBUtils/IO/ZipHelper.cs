@@ -37,7 +37,7 @@
         /// <param name="archiveFilenameIn">The location of the zipfile</param>
         /// <param name="outFolder">The folder where the file is located</param>
         /// <param name="password">Optional password</param>
-        public static void ExtractZipFile(string archiveFilenameIn, string outFolder, string password = null)
+        public static void ExtractZipFile(string archiveFilenameIn, string outFolder, string? password = null)
         {
             ZipFile zf = null;
             try

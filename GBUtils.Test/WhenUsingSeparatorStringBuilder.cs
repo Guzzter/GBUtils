@@ -44,11 +44,9 @@ namespace GBUtils.Test
         public void Given_NormalAppends_Expect_StringWithPipeSeparatedValues()
         {
             //Arrange.
-            string wrong = null;
             SeparatorStringBuilder separatorStringBuilder = new SeparatorStringBuilder(",");
             separatorStringBuilder.Append("value 1");
             separatorStringBuilder.Append("");
-            separatorStringBuilder.Append(wrong);
             separatorStringBuilder.Append("value 2");
 
             //Act.
