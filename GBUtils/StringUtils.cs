@@ -2,8 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using System.Diagnostics.CodeAnalysis;
 
     public enum StringCoalesceMode
     {
@@ -12,17 +11,6 @@
 
     public static class StringUtils
     {
-        /// <summary>
-        /// return String.IsNullOrWhiteSpace(input);
-        /// </summary>
-        /// <param name="?"></param>
-        /// <param name="input"> </param>
-        /// <returns></returns>
-        public static bool IsBlank(this string input)
-        {
-            return String.IsNullOrWhiteSpace(input);
-        }
-
         /// <summary>
         /// Coalesce the given string with the given mode using the given fallback.
         /// </summary>
@@ -36,8 +24,10 @@
             {
                 case StringCoalesceMode.Null:
                     return input ?? fallback;
+
                 case StringCoalesceMode.NullOrEmpty:
                     return string.IsNullOrEmpty(input) ? fallback : input;
+
                 default:
                     return string.IsNullOrWhiteSpace(input) ? fallback : input;
             }
@@ -62,6 +52,17 @@
         public static string Coalesce(this string input)
         {
             return Coalesce(input, "", StringCoalesceMode.NullOrBlank);
+        }
+
+        /// <summary>
+        /// return String.IsNullOrWhiteSpace(input);
+        /// </summary>
+        /// <param name="?"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static bool IsBlank(this string input)
+        {
+            return string.IsNullOrWhiteSpace(input);
         }
     }
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+			<Title>xUnit Fact With Arrange-Act-Assert Block And FluentAssertions</Title>
+			<Shortcut>xfact</Shortcut>
+			<Description>Code snippet which generates test Arrange-Act-Assert block</Description>
+			<Author>Guus Beltman</Author>
+		</Header>
+		<Snippet>
+			<Imports>
+				<Import>
+					<Namespace>Xunit</Namespace>
+				</Import>
+				<Import>
+					<Namespace>FluentAssertions</Namespace>
+				</Import>
+			</Imports>
+			<Declarations>
+				<Literal>
+					<ID>StateUnderTest</ID>
+					<ToolTip>Valid or invalid or null,...</ToolTip>
+					<Default>StateUnderTest</Default>
+				</Literal>
+				<Literal>
+					<ID>ExpectedBehavior</ID>
+					<ToolTip>What the outcome of the test should be</ToolTip>
+					<Default>ExpectedBehavior</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="csharp">
+				<![CDATA[[Fact]
+            public void Given_$StateUnderTest$_Expect_$ExpectedBehavior$()
+            {
+                //Arrange.
+
+                //Act.
+
+                //Assert.
+				true.Should().BeFalse();
+            }
+            $end$]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

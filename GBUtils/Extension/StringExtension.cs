@@ -1,44 +1,42 @@
 ﻿namespace GBUtils.Extension
 {
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
 
     public static class StringExtension
     {
         public const string DefaultJoinSeparator = ", ";
 
-        private static readonly EncoderReplacementFallback encoderReplacementFallback =
-            new EncoderReplacementFallback("");
-
         private static readonly DecoderReplacementFallback decoderReplacementFallback =
             new DecoderReplacementFallback("");
 
-        private const char MinCapA = 'A';
-        private const char MaxCapZ = 'Z';
-        private const char MinA = 'a';
-        private const char MaxZ = 'z';
-        private const char Min0 = '0';
-        private const char Max9 = '9';
+        private static readonly EncoderReplacementFallback encoderReplacementFallback =
+                    new EncoderReplacementFallback("");
 
-        public static string WhitelistFiltered(this string source)
+        /// <summary>
+        /// Converts a string from mainline to Mainline
+        /// </summary>
+        /// <param name="source">String to convert</param>
+        /// <returns>Correct cased string</returns>
+        public static string FirstCharacterUppercase(this string source)
         {
-            if (string.IsNullOrEmpty(source))
+            string result = source;
+            if (!string.IsNullOrWhiteSpace(source))
             {
-                return string.Empty;
-            }
-            StringBuilder sb = new StringBuilder();
-            foreach (char ch in source)
-            {
-                string normalized = (ch.ToString(CultureInfo.InvariantCulture)).Normalized();
-                if (!string.IsNullOrEmpty(normalized) && IsWhitelisted(normalized[0]))
+                int length = FirstCharacterLength(source);
+                result = source.Substring(0, length).ToUpper();
+
+                if (source.Length > length)
                 {
-                    sb.Append(ch);
+                    result += source.Substring(length);
                 }
             }
 
-            return sb.ToString();
+            return result;
         }
 
         /// <summary>
@@ -63,58 +61,78 @@
             return result;
         }
 
+        /// <summary>
+        /// Does an index of, with ignoring the casing
+        /// </summary>
+        /// <param name="pString"> The p string.</param>
+        /// <param name="pSearchForThisStringWithoutLookingAtCasing"> The p search for this string without looking at casing.</param>
+        /// <returns></returns>
+        public static int IndexOfIc(this string pString, string pSearchForThisStringWithoutLookingAtCasing)
+        {
+            if (string.IsNullOrEmpty(pString))
+                return -1;
+            return pString.IndexOf(pSearchForThisStringWithoutLookingAtCasing, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Alternative for !string.IsNullOrEmpty("string")
+        /// Use: "string".IsOk
+        /// </summary>
+        /// <param name="pString"> The string to check</param>
+        /// <returns>
+        ///     <c> true</c> if the specified p string is ok; otherwise, <c>false</c> .
+        /// </returns>
+        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength")]
+        public static bool IsNotNullOrEmpty(this string pString)
+        {
+            if (string.IsNullOrEmpty(pString))
+                return false;
+            return pString.Trim() != string.Empty;
+        }
+
+        /// <summary>
+        /// Inverse version of IsNotNullOrEmpty
+        /// </summary>
+        /// <param name="pString"> The p string.</param>
+        /// <returns>
+        ///     <c> true</c> if [is not ok] [the specified p string]; otherwise, <c>false</c> .
+        /// </returns>
+        public static bool IsNullOrEmpty(this string pString)
+        {
+            return !IsNotNullOrEmpty(pString);
+        }
+
+        /// <summary>
+        /// Determines whether [is one of] [the specified p string].
+        /// </summary>
+        /// <param name="pString"> The p string.</param>
+        /// <param name="pValues"> The p values.</param>
+        /// <returns>
+        ///     <c> true</c> if [is one of] [the specified p string]; otherwise, <c>false</c> .
+        /// </returns>
+        public static bool IsOneOf(this string pString, params string[] pValues)
+        {
+            if (pString == null || pValues == null || pValues.Length == 0)
+                return false;
+
+            foreach (string value in pValues)
+            {
+                if (pString.Equals(value, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
-        /// Converts a string from mainline to Mainline
+        /// Returns characters from left of specified length
         /// </summary>
-        /// <param name="source">String to convert</param>
-        /// <returns>Correct cased string</returns>
-        public static string FirstCharacterUppercase(this string source)
+        /// <param name="value">String value</param>
+        /// <param name="length">Max number of charaters to return</param>
+        /// <returns>Returns string from left</returns>
+        public static string Left(this string value, int length)
         {
-            string result = source;
-            if (!string.IsNullOrWhiteSpace(source))
-            {
-                int length = FirstCharacterLength(source);
-                result = source.Substring(0, length).ToUpper();
-
-                if (source.Length > length)
-                {
-                    result += source.Substring(length);
-                }
-            }
-
-            return result;
-        }
-
-        private static int FirstCharacterLength(string source)
-        {
-            int result = 0;
-
-            if (!string.IsNullOrWhiteSpace(source))
-            {
-                result = (source.StartsWith("ij", StringComparison.OrdinalIgnoreCase) ? 2 : 1);
-            }
-
-            return result;
-        }
-
-        private static bool IsWhitelisted(char c)
-        {
-            return IsBasicLetter(c) || IsDigit(c) || IsSpecialChar(c);
-        }
-
-        private static bool IsSpecialChar(char c)
-        {
-            return c == ' ' || c == ',' || c == '.' || c == '-';
-        }
-
-        private static bool IsBasicLetter(char c)
-        {
-            return (MinCapA <= c && c <= MaxCapZ) || (MinA <= c && c <= MaxZ);
-        }
-
-        private static bool IsDigit(char c)
-        {
-            return (Min0 <= c && c <= Max9);
+            return value.Length > length ? value.Substring(0, length) : value;
         }
 
         public static string Normalized(this string source)
@@ -127,6 +145,57 @@
         }
 
         /// <summary>
+        /// Match a pattern like:
+        ///
+        /// *.txt;*.jpg;
+        /// </summary>
+        /// <param name="pText"></param>
+        /// <param name="pPattern">Separated pattern</param>
+        /// <returns></returns>
+        public static bool PatternMatch(this string pText, string pPattern)
+        {
+            if (pPattern == null)
+            {
+                return false;
+            }
+            string[] patterns = pPattern.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            return pText.ContainsOneOfIc(patterns);
+        }
+
+        /// <summary>
+        /// Replace a string without looking at the casing
+        /// </summary>
+        /// <param name="original">The string to operate on</param>
+        /// <param name="replaceThis">String to replace</param>
+        /// <param name="withThis">Replacement for the replace</param>
+        /// <returns></returns>
+        public static string ReplaceIc(this string original,
+                    string replaceThis, string withThis)
+        {
+            int count = 0;
+            int position0 = 0;
+            int position1;
+            string upperString = original.ToUpper();
+            string upperPattern = replaceThis.ToUpper();
+            int inc = (original.Length / replaceThis.Length) *
+                      (withThis.Length - replaceThis.Length);
+            char[] chars = new char[original.Length + Math.Max(0, inc)];
+            while ((position1 = upperString.IndexOf(upperPattern,
+                                              position0)) != -1)
+            {
+                for (int i = position0; i < position1; ++i)
+                    chars[count++] = original[i];
+                for (int i = 0; i < withThis.Length; ++i)
+                    chars[count++] = withThis[i];
+                position0 = position1 + replaceThis.Length;
+            }
+            if (position0 == 0) return original;
+            for (int i = position0; i < original.Length; ++i)
+                chars[count++] = original[i];
+            return new string(chars, 0, count);
+        }
+
+        /// <summary>
         /// Returns characters from right of specified length
         /// </summary>
         /// <param name="value">String value</param>
@@ -134,18 +203,60 @@
         /// <returns>Returns string from right</returns>
         public static string Right(this string value, int length)
         {
-            return value != null && value.Length > length ? value.Substring(value.Length - length) : value;
+            return value.Length > length ? value.Substring(value.Length - length) : value;
+        }
+
+        /// <summary>
+        /// Startses the with ic.
+        /// </summary>
+        /// <param name="input"> The string.</param>
+        /// <param name="searchForThisStringWithoutLookingAtCasing"> The search for this string without looking at casing.</param>
+        /// <returns></returns>
+        public static bool StartsWithIc(this string input, string searchForThisStringWithoutLookingAtCasing)
+        {
+            if (string.IsNullOrEmpty(input) || searchForThisStringWithoutLookingAtCasing == null)
+                return false;
+            return input.StartsWith(searchForThisStringWithoutLookingAtCasing, StringComparison.InvariantCultureIgnoreCase);
         }
 
         /// <summary>
-        /// Returns characters from left of specified length
+        /// Starts with one of the values (ignore case).
         /// </summary>
-        /// <param name="value">String value</param>
-        /// <param name="length">Max number of charaters to return</param>
-        /// <returns>Returns string from left</returns>
-        public static string Left(this string value, int length)
+        /// <param name="pString">The p string.</param>
+        /// <param name="pValues">The p values.</param>
+        /// <returns></returns>
+        public static bool StartsWithIcOneOf(this string pString, params string[] pValues)
         {
-            return value != null && value.Length > length ? value.Substring(0, length) : value;
+            return pString.StartsWithIcOneOf(false, pValues);
+        }
+
+        /// <summary>
+        /// Starts with one of the values (trim first and ignore case)
+        /// </summary>
+        /// <param name="pString"> The p string.</param>
+        /// <param name="pTrimBeforeCompare"> if set to <c>true </c> [p trim before compare].</param>
+        /// <param name="pValues"> The p values.</param>
+        /// <returns></returns>
+        public static bool StartsWithIcOneOf(this string pString, bool pTrimBeforeCompare, params string[] pValues)
+        {
+            if (pString == null || pValues == null || pValues.Length == 0)
+                return false;
+
+            foreach (string value in pValues)
+            {
+                if (pTrimBeforeCompare)
+                {
+                    if (pString.StartsWithIc(value.Trim()))
+                        return true;
+                }
+                else
+                {
+                    if (pString.StartsWithIc(value))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -179,7 +290,6 @@
             return val;
         }
 
-
         /// <summary>
         /// Same as substring only in Mirror from the right
         /// </summary>
@@ -200,7 +310,6 @@
                 return string.Empty;
             }
             int len = pLength;
-            string value = pValue;
             int endPos = pValue.Length - pPosition;
             int pos = endPos - len;
             if (pos < 0)
@@ -212,7 +321,6 @@
             {
                 len = 0;
             }
-            val = value;
             val = pValue.Substring(pos, len);
             return val;
         }
@@ -229,47 +337,39 @@
         }
 
         /// <summary>
-        /// Match a pattern like:
-        /// 
-        /// *.txt;*.jpg;
-        /// 
+        /// Keeps alphanumeric, spaces, dots, commas and dashes.
         /// </summary>
-        /// <param name="pText"></param>
-        /// <param name="pPattern">Separated pattern</param>
+        /// <param name="source"></param>
         /// <returns></returns>
-        public static bool PatternMatch(this string pText, string pPattern)
+        public static string WhitelistFiltered(this string source)
         {
-            if (pPattern == null)
+            if (string.IsNullOrEmpty(source))
             {
-                return false;
+                return string.Empty;
             }
-            string[] patterns = pPattern.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            return pText.ContainsOneOfIc(patterns);
+            StringBuilder sb = new StringBuilder();
+            foreach (char ch in source)
+            {
+                string normalized = (ch.ToString(CultureInfo.InvariantCulture)).Normalized();
+                if (!string.IsNullOrEmpty(normalized) && CharUtils.IsWhitelisted(normalized[0]))
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return sb.ToString();
         }
 
-        public static string ReplaceIc(this string original,
-                    string pattern, string replacement)
+        private static int FirstCharacterLength(string source)
         {
-            int count, position0, position1;
-            count = position0 = position1 = 0;
-            string upperString = original.ToUpper();
-            string upperPattern = pattern.ToUpper();
-            int inc = (original.Length / pattern.Length) *
-                      (replacement.Length - pattern.Length);
-            char[] chars = new char[original.Length + Math.Max(0, inc)];
-            while ((position1 = upperString.IndexOf(upperPattern,
-                                              position0)) != -1)
+            int result = 0;
+
+            if (!string.IsNullOrWhiteSpace(source))
             {
-                for (int i = position0; i < position1; ++i)
-                    chars[count++] = original[i];
-                for (int i = 0; i < replacement.Length; ++i)
-                    chars[count++] = replacement[i];
-                position0 = position1 + pattern.Length;
+                result = (source.StartsWith("ij", StringComparison.OrdinalIgnoreCase) ? 2 : 1);
             }
-            if (position0 == 0) return original;
-            for (int i = position0; i < original.Length; ++i)
-                chars[count++] = original[i];
-            return new string(chars, 0, count);
+
+            return result;
         }
     }
 }

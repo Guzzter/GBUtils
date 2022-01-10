@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 
 namespace GBUtils.Extension
 {
@@ -22,7 +20,7 @@ namespace GBUtils.Extension
                 dblSByte = bytes / 1024.0;
             }
 
-            return string.Format("{0:0.##} {1}", dblSByte, Suffix[i]);
+            return string.Format(new CultureInfo("en-US"), "{0:0.##} {1}", dblSByte, Suffix[i]);
         }
     }
 }

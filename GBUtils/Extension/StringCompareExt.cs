@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GBUtils.Extension
 {
@@ -10,8 +7,6 @@ namespace GBUtils.Extension
     /// </summary>
     public static class StringCompareExt
     {
-        
-
         /// <summary>
         /// Searches for occurences in a string with case-sensitivity
         /// </summary>
@@ -24,6 +19,7 @@ namespace GBUtils.Extension
                 return false;
 
             bool found = false;
+
             //if (others == null)
             //  return found;
 
@@ -46,7 +42,7 @@ namespace GBUtils.Extension
         {
             bool found = false;
             if (allNeedles == null)
-              return false;
+                return false;
 
             foreach (var needle in allNeedles)
             {
@@ -69,6 +65,24 @@ namespace GBUtils.Extension
         }
 
         /// <summary>
+        /// Checks string object's value to array of string values
+        /// </summary>
+        /// <param name="source">String to evaluate</param>
+        /// <param name="stringValues">Array of string values to compare</param>
+        /// <returns>Return true if any string value matches</returns>
+        public static bool In(this string source, params string[] stringValues)
+        {
+            if (stringValues == null)
+                return false;
+
+            foreach (string otherValue in stringValues)
+                if (string.Compare(source, otherValue) == 0)
+                    return true;
+
+            return false;
+        }
+
+        /// <summary>
         /// Checks if string starts with something with case insensitivity
         /// </summary>
         /// <param name="source">String to evaluate</param>
@@ -86,24 +100,6 @@ namespace GBUtils.Extension
                 startString = startString.Trim();
             }
             return (source.ToLowerInvariant().StartsWith(startString.ToLowerInvariant()));
-        }
-
-        /// <summary>
-        /// Checks string object's value to array of string values
-        /// </summary>        
-        /// <param name="source">String to evaluate</param>
-        /// <param name="stringValues">Array of string values to compare</param>
-        /// <returns>Return true if any string value matches</returns>
-        public static bool In(this string source, params string[] stringValues)
-        {
-            if (stringValues == null)
-                return false;
-
-            foreach (string otherValue in stringValues)
-                if (string.Compare(source, otherValue) == 0)
-                    return true;
-
-            return false;
         }
     }
 }

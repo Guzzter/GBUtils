@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Text;
 
-
     public static class EnumerableExtension
     {
         private static readonly UTF8Encoding encoding = new UTF8Encoding();

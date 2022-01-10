@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace GBUtils.IO
 {
@@ -19,12 +16,16 @@ namespace GBUtils.IO
             {
                 case FilePathFormat.Full:
                     return filePath.FullName;
+
                 case FilePathFormat.Short:
                     return filePath.Name;
+
                 case FilePathFormat.ShortFileFullDir:
                     return string.Format("{0} ({1})", filePath.Name, filePath.DirectoryName);
+
                 case FilePathFormat.Ellipsis:
                     return string.Format(@"{1}...{0}{2}{0}{3}", Path.DirectorySeparatorChar, filePath.Directory.Root.Name, filePath.Directory.Name, filePath.Name);
+
                 default:
                     return filePath.DirectoryName;
             }
