@@ -1,6 +1,7 @@
 ﻿using System;
 using Xunit;
 using GBUtils.Extension;
+using FluentAssertions;
 
 namespace GBUtils.Test.Extension
 {
@@ -49,6 +50,13 @@ namespace GBUtils.Test.Extension
         }
 
         [Fact]
+        public void Given_NormalSentence_Expect_EveryWordStartingWithUppercase()
+        {
+            //Assert.
+            "This is a sentence".ToTitleCase().Should().Be("This Is A Sentence");
+        }
+
+        [Fact]
         public void Left()
         {
             Assert.Equal("Hey", "Hey Dude".Left(3));
@@ -70,6 +78,30 @@ namespace GBUtils.Test.Extension
             Assert.Equal("áàâéèêíìîóòôúùûäö., -", "áàâéèêíìîóòôúùûäö., -".WhitelistFiltered());
             Assert.Equal("ABCD", "A#$%^B<>&&;C;:'D".WhitelistFiltered());
             Assert.Equal("0123456789", "0123456789".WhitelistFiltered());
+        }
+
+        [Fact]
+        private void KeepAlphaNumericAndSpaceChars()
+        {
+            "Word123 - Two!".KeepAlphaNumericAndSpaceChars().Should().Be("Word123  Two");
+        }
+
+        [Fact]
+        private void KeepAlphaText()
+        {
+            "Word123 - Two!".KeepAlphaChars().Should().Be("WordTwo");
+        }
+
+        [Fact]
+        private void KeepNumberChars()
+        {
+            "Word123 - Two!".KeepNumberChars().Should().Be("123");
+        }
+
+        [Fact]
+        private void ToTitleCase()
+        {
+            "This is camel case".ToTitleCase().Should().Be("This Is Camel Case");
         }
     }
 }

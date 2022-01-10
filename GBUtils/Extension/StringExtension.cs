@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     public static class StringExtension
     {
@@ -61,28 +62,28 @@
             return result;
         }
 
-        /// <summary>
-        /// Does an index of, with ignoring the casing
-        /// </summary>
-        /// <param name="pString"> The p string.</param>
-        /// <param name="pSearchForThisStringWithoutLookingAtCasing"> The p search for this string without looking at casing.</param>
-        /// <returns></returns>
-        public static int IndexOfIc(this string pString, string pSearchForThisStringWithoutLookingAtCasing)
+        /// <summary>
+                /// Does an index of, with ignoring the casing
+                /// </summary>
+                /// <param name="pString"> The p string.</param>
+                /// <param name="pSearchForThisStringWithoutLookingAtCasing"> The p search for this string without looking at casing.</param>
+                /// <returns></returns>
+        public static int IndexOfIc(this string pString, string pSearchForThisStringWithoutLookingAtCasing)
         {
             if (string.IsNullOrEmpty(pString))
                 return -1;
             return pString.IndexOf(pSearchForThisStringWithoutLookingAtCasing, StringComparison.OrdinalIgnoreCase);
         }
 
-        /// <summary>
-        /// Alternative for !string.IsNullOrEmpty("string")
-        /// Use: "string".IsOk
-        /// </summary>
-        /// <param name="pString"> The string to check</param>
-        /// <returns>
-        ///     <c> true</c> if the specified p string is ok; otherwise, <c>false</c> .
-        /// </returns>
-        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength")]
+        /// <summary>
+                /// Alternative for !string.IsNullOrEmpty("string")
+                /// Use: "string".IsOk
+                /// </summary>
+                /// <param name="pString"> The string to check</param>
+                /// <returns>
+                ///     <c> true</c> if the specified p string is ok; otherwise, <c>false</c> .
+                /// </returns>
+        [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength")]
         public static bool IsNotNullOrEmpty(this string pString)
         {
             if (string.IsNullOrEmpty(pString))
@@ -90,27 +91,27 @@
             return pString.Trim() != string.Empty;
         }
 
-        /// <summary>
-        /// Inverse version of IsNotNullOrEmpty
-        /// </summary>
-        /// <param name="pString"> The p string.</param>
-        /// <returns>
-        ///     <c> true</c> if [is not ok] [the specified p string]; otherwise, <c>false</c> .
-        /// </returns>
-        public static bool IsNullOrEmpty(this string pString)
+        /// <summary>
+                /// Inverse version of IsNotNullOrEmpty
+                /// </summary>
+                /// <param name="pString"> The p string.</param>
+                /// <returns>
+                ///     <c> true</c> if [is not ok] [the specified p string]; otherwise, <c>false</c> .
+                /// </returns>
+        public static bool IsNullOrEmpty(this string pString)
         {
             return !IsNotNullOrEmpty(pString);
         }
 
-        /// <summary>
-        /// Determines whether [is one of] [the specified p string].
-        /// </summary>
-        /// <param name="pString"> The p string.</param>
-        /// <param name="pValues"> The p values.</param>
-        /// <returns>
-        ///     <c> true</c> if [is one of] [the specified p string]; otherwise, <c>false</c> .
-        /// </returns>
-        public static bool IsOneOf(this string pString, params string[] pValues)
+        /// <summary>
+                /// Determines whether [is one of] [the specified p string].
+                /// </summary>
+                /// <param name="pString"> The p string.</param>
+                /// <param name="pValues"> The p values.</param>
+                /// <returns>
+                ///     <c> true</c> if [is one of] [the specified p string]; otherwise, <c>false</c> .
+                /// </returns>
+        public static bool IsOneOf(this string pString, params string[] pValues)
         {
             if (pString == null || pValues == null || pValues.Length == 0)
                 return false;
@@ -122,6 +123,21 @@
             }
 
             return false;
+        }
+
+        public static string KeepAlphaChars(this string input)
+        {
+            return Regex.Replace(input, "[^a-zA-Z]+", "");
+        }
+
+        public static string KeepAlphaNumericAndSpaceChars(this string input)
+        {
+            return Regex.Replace(input, @"[^a-zA-Z0-9\s]+", "");
+        }
+
+        public static string KeepNumberChars(this string input)
+        {
+            return Regex.Replace(input, "[^0-9]+", "");
         }
 
         /// <summary>
@@ -323,6 +339,34 @@
             }
             val = pValue.Substring(pos, len);
             return val;
+        }
+
+        /// <summary>
+        /// Converts every word to
+        /// </summary>
+        /// <param name="original"></param>
+        /// <returns></returns>
+        public static string ToTitleCase(this string original)
+        {
+            if (string.IsNullOrEmpty(original))
+                return "";
+
+            // Check if there are words that contain all capitals
+            var splitted = original.Split(' ');
+            string joined = "";
+            foreach (var s in splitted)
+            {
+                if (s.All(char.IsUpper))
+                {
+                    joined += s.ToLowerInvariant() + " ";
+                }
+                else
+                {
+                    joined += s + " ";
+                }
+            }
+
+            return Regex.Replace(joined, @"\b\w", m => m.ToString().ToUpper()).Trim();
         }
 
         /// <summary>
