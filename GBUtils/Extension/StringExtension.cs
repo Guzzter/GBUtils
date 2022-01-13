@@ -1,13 +1,12 @@
-﻿namespace GBUtils.Extension
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
+namespace GBUtils.Extension
+{
     public static class StringExtension
     {
         public const string DefaultJoinSeparator = ", ";
@@ -63,62 +62,62 @@
         }
 
         /// <summary>
-                /// Does an index of, with ignoring the casing
-                /// </summary>
-                /// <param name="pString"> The p string.</param>
-                /// <param name="pSearchForThisStringWithoutLookingAtCasing"> The p search for this string without looking at casing.</param>
-                /// <returns></returns>
-        public static int IndexOfIc(this string pString, string pSearchForThisStringWithoutLookingAtCasing)
+        /// Does an index of, with ignoring the casing
+        /// </summary>
+        /// <param name="value">The p string.</param>
+        /// <param name="searchForThisStringWithoutLookingAtCasing">The p search for this string without looking at casing.</param>
+        /// <returns></returns>
+        public static int IndexOfIc(this string value, string searchForThisStringWithoutLookingAtCasing)
         {
-            if (string.IsNullOrEmpty(pString))
+            if (string.IsNullOrEmpty(value))
                 return -1;
-            return pString.IndexOf(pSearchForThisStringWithoutLookingAtCasing, StringComparison.OrdinalIgnoreCase);
+            return value.IndexOf(searchForThisStringWithoutLookingAtCasing, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
-                /// Alternative for !string.IsNullOrEmpty("string")
-                /// Use: "string".IsOk
-                /// </summary>
-                /// <param name="pString"> The string to check</param>
-                /// <returns>
-                ///     <c> true</c> if the specified p string is ok; otherwise, <c>false</c> .
-                /// </returns>
+        /// Alternative for !string.IsNullOrEmpty("string")
+        /// Use: "string".IsOk
+        /// </summary>
+        /// <param name="value"> The string to check</param>
+        /// <returns>
+        ///     <c> true</c> if the specified p string is ok; otherwise, <c>false</c> .
+        /// </returns>
         [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength")]
-        public static bool IsNotNullOrEmpty(this string pString)
+        public static bool IsNotNullOrEmpty(this string value)
         {
-            if (string.IsNullOrEmpty(pString))
+            if (string.IsNullOrEmpty(value))
                 return false;
-            return pString.Trim() != string.Empty;
+            return value.Trim() != string.Empty;
         }
 
         /// <summary>
-                /// Inverse version of IsNotNullOrEmpty
-                /// </summary>
-                /// <param name="pString"> The p string.</param>
-                /// <returns>
-                ///     <c> true</c> if [is not ok] [the specified p string]; otherwise, <c>false</c> .
-                /// </returns>
-        public static bool IsNullOrEmpty(this string pString)
+        /// Inverse version of IsNotNullOrEmpty
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>
+        ///     <c> true</c> if [is not ok] [the specified p string]; otherwise, <c>false</c> .
+        /// </returns>
+        public static bool IsNullOrEmpty(this string value)
         {
-            return !IsNotNullOrEmpty(pString);
+            return !IsNotNullOrEmpty(value);
         }
 
         /// <summary>
-                /// Determines whether [is one of] [the specified p string].
+                /// Determines whether if value is one of the allowedValues
                 /// </summary>
-                /// <param name="pString"> The p string.</param>
-                /// <param name="pValues"> The p values.</param>
+                /// <param name="value"> The value string.</param>
+                /// <param name="allowedValues"> The allowed values.</param>
                 /// <returns>
-                ///     <c> true</c> if [is one of] [the specified p string]; otherwise, <c>false</c> .
+                ///     <c> true</c> if value is one of [the specified allowed values]; otherwise, <c>false</c> .
                 /// </returns>
-        public static bool IsOneOf(this string pString, params string[] pValues)
+        public static bool IsOneOf(this string value, params string[] allowedValues)
         {
-            if (pString == null || pValues == null || pValues.Length == 0)
+            if (value == null || allowedValues == null || allowedValues.Length == 0)
                 return false;
 
-            foreach (string value in pValues)
+            foreach (string allowValue in allowedValues)
             {
-                if (pString.Equals(value, StringComparison.OrdinalIgnoreCase))
+                if (value.Equals(allowValue, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 
@@ -262,7 +261,7 @@
             {
                 if (pTrimBeforeCompare)
                 {
-                    if (pString.StartsWithIc(value.Trim()))
+                    if (pString.Trim().StartsWithIc(value.Trim()))
                         return true;
                 }
                 else
@@ -278,55 +277,55 @@
         /// <summary>
         /// Same as Substring function with one difference it will not return errors when invalid positions are given.
         /// </summary>
-        /// <param name="pValue"></param>
-        /// <param name="pPosition"></param>
-        /// <param name="pLength"></param>
+        /// <param name="value"></param>
+        /// <param name="position"></param>
+        /// <param name="length"></param>
         /// <returns></returns>
-        public static string SubStringLeft(string pValue, int pPosition, int pLength)
+        public static string SubstringLeft(this string value, int position, int length)
         {
-            string val = pValue;
+            string val = value;
             if (val == null)
             {
                 return string.Empty;
             }
-            if (pLength == 0)
+            if (length <= 0)
             {
                 return string.Empty;
             }
-            if (pPosition > pValue.Length)
+            if (position > value.Length)
             {
                 return string.Empty;
             }
-            int len = pLength;
-            if ((pPosition + len) > pValue.Length)
+            int len = length;
+            if ((position + len) > value.Length)
             {
-                len = pValue.Length - pPosition;
+                len = value.Length - position;
             }
-            val = pValue.Substring(pPosition, len);
+            val = value.Substring(position, len);
             return val;
         }
 
         /// <summary>
-        /// Same as substring only in Mirror from the right
+        /// Same as substring only from right to left
         /// </summary>
         /// <returns></returns>
-        public static string SubStringRight(string pValue, int pPosition, int pLength)
+        public static string SubstringRight(this string value, int position, int length)
         {
-            string val = pValue;
+            string val = value;
             if (val == null)
             {
                 return string.Empty;
             }
-            if (pLength == 0)
+            if (length <= 0)
             {
                 return string.Empty;
             }
-            if (pPosition > pValue.Length)
+            if (position > value.Length)
             {
                 return string.Empty;
             }
-            int len = pLength;
-            int endPos = pValue.Length - pPosition;
+            int len = length;
+            int endPos = value.Length - position;
             int pos = endPos - len;
             if (pos < 0)
             {
@@ -337,12 +336,12 @@
             {
                 len = 0;
             }
-            val = pValue.Substring(pos, len);
+            val = value.Substring(pos, len);
             return val;
         }
 
         /// <summary>
-        /// Converts every word to
+        /// Converts every word in a sentence to start with a capital letter
         /// </summary>
         /// <param name="original"></param>
         /// <returns></returns>
@@ -372,12 +371,21 @@
         /// <summary>
         /// Truncates a string to a desired length
         /// </summary>
-        /// <param name="pValue"></param>
-        /// <param name="pMaxLength"></param>
+        /// <param name="value"></param>
+        /// <param name="maxLength"></param>
         /// <returns></returns>
-        public static string Truncate(this string pValue, int pMaxLength)
+        public static string Truncate(this string value, int maxLength, string appendWhenTruncated = "")
         {
-            return pValue.Left(pMaxLength);
+            if (maxLength <= 0)
+            {
+                return value;
+            }
+            string truncated = value.Left(maxLength);
+            if (truncated.Length != value.Length)
+            {
+                truncated += appendWhenTruncated;
+            }
+            return truncated;
         }
 
         /// <summary>
