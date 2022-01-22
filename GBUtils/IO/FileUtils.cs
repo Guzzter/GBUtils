@@ -55,27 +55,6 @@ namespace GBUtils.IO
             return fullFileName;
         }
 
-        /// <summary>
-        /// Iterate through directories from end and if exist return that path When directory does not exist check parent directory If path is empty
-        /// and still no result? Use c:\ as default
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static string GetNearestPossibleDir(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                return @"c:\";
-            }
-
-            if (!Directory.Exists(path))
-            {
-                path = path.Substring(0, path.LastIndexOf(@"\"));
-                path = GetNearestPossibleDir(path);
-            }
-            return path;
-        }
-
         public static string GetRandomFileName(string extension)
         {
             return Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + extension;
